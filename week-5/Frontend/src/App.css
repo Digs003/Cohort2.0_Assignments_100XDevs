@@ -1,0 +1,43 @@
+
+.card{
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px;
+    max-width: 400px;
+    background-color: black;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.name{
+    font-size: 24px;
+    margin-bottom: 10px;
+    color:#ddd;
+}
+.description{
+    font-size:16px;
+    color:#ddd;
+    margin-bottom: 15px;
+}
+.interestTitle{
+    font-size: 18px;
+    margin-bottom: 10px;
+    color:#ddd;
+}
+.interestItem{
+    font-size: 14px;
+    margin-bottom: 5px;
+    color:#ddd;
+}
+.socialLinks{
+    display: flex;
+    margin-bottom: 15px;
+}
+.link{
+    color:#ddd;
+    padding:10px 15px;
+    border-radius: 5px;
+    background-color: #007BFF;
+    display:inline-block;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin:10px;
+}

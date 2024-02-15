@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+
+
+  <script>
+    let globalId = 1;
+    let todoState = [];
+    let oldTodoState = [];
+
+    function addTodoToDom(todo) {
+      let newTodoElement = document.createElement('div');
+      newTodoElement.setAttribute('id', todo.id);
+      newTodoElement.setAttribute('style', "margin: 20px 10px; padding: 10px; border:1px; border-style:solid; border-color:white");
+
+      let title = document.createElement('div');
+      title.setAttribute('class', 'title');
+      title.innerHTML = todo.title
+
+      let description = document.createElement('div');
+      description.setAttribute('class', 'description');
+      description.innerHTML = todo.description
+
+      newTodoElement.appendChild(title);
+      newTodoElement.appendChild(description);
+
+      let todosContainer = document.getElementById('todos');
+      todosContainer.appendChild(newTodoElement);
+    }
+
+    function removeTodoFromDom(todo) {
+      document.getElementById(todo.id).remove()
+    }
+
+    function updateTodoInDom(todo) {
+      let todoDiv = document.getElementById(todo.id);
+      if (todo.title) {
+        todo.querySelector('.title').innerHTML = todo.title
+      }
+      if (todo.description) {
+        todo.querySelector('.description').innerHTML = todo.description
+      }
+
+    }
+
+    function updateState(newTodos) {
+      let added = [];
+      let deleted = [];
+      let updated = [];
+
+      if (newTodos.length == 0) {
+        deleted = newTodos;
+      } else if (oldTodoState.length == 0) {
+        added = newTodos;
+      } else {
+        newTodos.forEach(newTodo => {
+          let oldTodoIndex = oldTodoState.findIndex((oldTodo) => newTodo.id === oldTodo.id)
+          if (oldTodoIndex == -1) {
+            // newTodo was not found in the oldTodo
+            // it's a new task
+            added.push(newTodo)
+          } else {
+            // it was found, check if it was updated
+            let updatedTodoItem = {
+              id: newTodo.id
+            };
+            if (newTodo.title != oldTodoState[oldTodoIndex].title) {
+              updatedTodoItem.title = newTodo.title
+            }
+            if (newTodo.description != oldTodoState[oldTodoIndex].description) {
+              updatedTodoItem.description = newTodo.description
+            }
+            if (Object.keys(updatedTodoItem).length > 1) {
+              // if title or description was changed
+              // then the number of keys must be more than one
+              // so push only if the object has any other key than "id"
+              updated.push(newTodo)
+            }
+
+          }
+
+        })
+
+        oldTodoState.forEach(oldTodo => {
+          let newTodoIndex = newTodos.findIndex((newTodo) => newTodo.id === oldTodo.id);
+          if (newTodoIndex == -1) {
+            // if oldTodoItem was not find in newTodo
+            // it is deleted
+            deleted.push(oldTodo)
+          }
+
+        })
+
+      }
+
+
+      // calculate these 3 arrays
+      // call addTodo, removeTodo, updateTodo functions on each of the
+      // elements
+      added.forEach(addTodoToDom);
+      deleted.forEach(removeTodoFromDom);
+      updated.forEach(updateTodoInDom);
+
+      oldTodoState = [...newTodos];
+    }
+
+    function addTodo() {
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+      todoState.push({
+        title: title,
+        description: description,
+        id: globalId++,
+      })
+      updateState(todoState);
+    }
+  </script>
+</head>
+
+<body>
+  <input type="text" id="title" placeholder="Todo title"></input> <br /><br />
+  <input type="text" id="description" placeholder="Todo description"></input> <br /><br />
+  <button onclick="addTodo()">Add todo</button>
+  <br /> <br />
+
+  <div id="todos">
+
+  </div>
+</body>
+
+</html>
